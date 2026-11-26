@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Entrar · Prumo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth">
+  <main class="auth-layout">
+    <aside class="auth-brand">
+      <div class="plumb" aria-hidden="true"><span class="plumb-line"></span><span class="plumb-weight"></span></div>
+      <p class="wordmark">Prumo</p>
+      <h1>Seu dinheiro, no prumo.</h1>
+      <p class="lead">Registre entradas e saídas, veja para onde o mês foi e termine cada dia sabendo quanto sobra.</p>
+    </aside>
+
+    <section class="auth-panel" aria-labelledby="titulo">
+      <form id="login-form" method="post" action="/login" novalidate>
+        <h2 id="titulo">Entrar na sua conta</h2>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required autofocus>
+          <p class="field-error" data-for="email" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required>
+          <p class="field-error" data-for="password" hidden></p>
+        </div>
+
+        <label class="check"><input type="checkbox" id="show-password"> Mostrar senha</label>
+
+        <button class="btn btn-primary btn-block" type="submit">Entrar</button>
+        <p class="alt">Ainda não tem conta? <a href="/register">Criar conta</a></p>
+      </form>
+    </section>
+  </main>
+  <script src="/js/common.js" defer></script>
+  <script src="/js/auth.js" defer></script>
+</body>
+</html>

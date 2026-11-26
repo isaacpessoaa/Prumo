@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Painel · Prumo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="app">
+  <header class="topbar">
+    <p class="wordmark wordmark-dark">Prumo</p>
+    <div class="topbar-actions">
+      <span class="who" id="user-name"></span>
+      <button class="btn btn-ghost" id="btn-password" type="button">Senha</button>
+      <button class="btn btn-ghost" id="btn-logout" type="button">Sair</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="month-nav" role="group" aria-label="Escolher mês">
+      <button class="icon-btn" id="month-prev" type="button" aria-label="Mês anterior">‹</button>
+      <h1 id="month-label" aria-live="polite"></h1>
+      <button class="icon-btn" id="month-next" type="button" aria-label="Próximo mês">›</button>
+    </div>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <h2 id="hero-title" class="sr-only">Resumo do mês</h2>
+      <div class="hero-main">
+        <p class="hero-label">Resultado do mês</p>
+        <p class="hero-value" id="month-balance">R$ 0,00</p>
+        <div class="split" aria-hidden="true"><span class="split-in" id="split-in"></span><span class="split-out" id="split-out"></span></div>
+      </div>
+      <dl class="stats">
+        <div><dt>Entradas</dt><dd class="pos" id="income">R$ 0,00</dd></div>
+        <div><dt>Saídas</dt><dd class="neg" id="expense">R$ 0,00</dd></div>
+        <div><dt>Saldo acumulado</dt><dd id="accumulated">R$ 0,00</dd></div>
+      </dl>
+    </section>
+
+    <div class="grid-2">
+      <section class="card" aria-labelledby="hist-title">
+        <h2 id="hist-title">Últimos 6 meses</h2>
+        <div class="legend"><span class="dot dot-in"></span>Entradas <span class="dot dot-out"></span>Saídas</div>
+        <div id="chart" class="chart" role="img" aria-label="Gráfico de entradas e saídas dos últimos seis meses"></div>
+      </section>
+
+      <section class="card" aria-labelledby="cat-title">
+        <h2 id="cat-title">Para onde foi o dinheiro</h2>
+        <ul class="cats" id="cats"></ul>
+        <p class="empty" id="cats-empty" hidden>Nenhuma saída neste mês.</p>
+      </section>
+    </div>
+
+    <section class="card budget-card" aria-labelledby="budget-title">
+      <div class="card-head">
+        <h2 id="budget-title">Orçamento do mês</h2>
+        <button class="btn btn-ghost" id="btn-budget" type="button">Definir orçamento</button>
+      </div>
+      <ul class="cats" id="budgets"></ul>
+      <p class="empty" id="budgets-empty" hidden>Defina um limite mensal para uma categoria e acompanhe aqui quanto já foi gasto.</p>
+    </section>
+
+    <section class="card" aria-labelledby="tx-title">
+      <div class="card-head">
+        <h2 id="tx-title">Movimentações</h2>
+        <div class="card-tools">
+          <div class="chips" role="group" aria-label="Filtrar por tipo">
+            <button class="chip" type="button" data-filter="" aria-pressed="true">Todas</button>
+            <button class="chip" type="button" data-filter="income" aria-pressed="false">Entradas</button>
+            <button class="chip" type="button" data-filter="expense" aria-pressed="false">Saídas</button>
+          </div>
+          <button class="btn btn-primary" id="btn-new" type="button">Nova movimentação</button>
+        </div>
+      </div>
+      <ul class="tx-list" id="tx-list"></ul>
+      <p class="empty" id="tx-empty" hidden>Nada registrado neste mês. Use “Nova movimentação” para começar.</p>
+      <button class="btn btn-ghost" id="btn-more" type="button" hidden>Carregar mais</button>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="dlg-tx" aria-labelledby="dlg-tx-title">
+    <form id="tx-form" method="dialog" novalidate>
+      <h2 id="dlg-tx-title">Nova movimentação</h2>
+      <p class="form-error" id="tx-error" role="alert" hidden></p>
+      <fieldset class="segmented">
+        <legend class="sr-only">Tipo</legend>
+        <label><input type="radio" name="type" value="expense" checked><span>Saída</span></label>
+        <label><input type="radio" name="type" value="income"><span>Entrada</span></label>
+      </fieldset>
+      <div class="field"><label for="tx-amount">Valor (R$)</label>
+        <input id="tx-amount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" maxlength="13" required>
+        <p class="field-error" data-for="amount" hidden></p></div>
+      <div class="field"><label for="tx-description">Descrição</label>
+        <input id="tx-description" name="description" type="text" maxlength="120" autocomplete="off" required>
+        <p class="field-error" data-for="description" hidden></p></div>
+      <div class="row">
+        <div class="field"><label for="tx-category">Categoria</label>
+          <select id="tx-category" name="category" required></select>
+          <p class="field-error" data-for="category" hidden></p></div>
+        <div class="field"><label for="tx-date">Data</label>
+          <input id="tx-date" name="date" type="date" required>
+          <p class="field-error" data-for="date" hidden></p></div>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" type="button" data-close>Cancelar</button>
+        <button class="btn btn-primary" type="submit" id="tx-save">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-budget" aria-labelledby="dlg-budget-title">
+    <form id="budget-form" method="dialog" novalidate>
+      <h2 id="dlg-budget-title">Novo orçamento</h2>
+      <p class="hint">Limite mensal de gastos para a categoria. Vale para todos os meses.</p>
+      <p class="form-error" id="budget-error" role="alert" hidden></p>
+      <div class="field"><label for="budget-category">Categoria</label>
+        <select id="budget-category" name="category" required></select>
+        <p class="field-error" data-for="category" hidden></p></div>
+      <div class="field"><label for="budget-limit">Limite mensal (R$)</label>
+        <input id="budget-limit" name="limit" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" maxlength="13" required>
+        <p class="field-error" data-for="limit" hidden></p></div>
+      <div class="dialog-actions split-actions">
+        <button class="btn btn-link-danger" type="button" id="budget-remove" hidden>Remover orçamento</button>
+        <span>
+          <button class="btn btn-ghost" type="button" data-close>Cancelar</button>
+          <button class="btn btn-primary" type="submit" id="budget-save">Salvar</button>
+        </span>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-delete" aria-labelledby="dlg-delete-title">
+    <form method="dialog" id="delete-form">
+      <h2 id="dlg-delete-title">Excluir movimentação?</h2>
+      <p id="delete-text">Essa ação não pode ser desfeita.</p>
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" type="button" data-close>Cancelar</button>
+        <button class="btn btn-danger" type="submit">Excluir</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-password" aria-labelledby="dlg-password-title">
+    <form id="password-form" method="dialog" novalidate>
+      <h2 id="dlg-password-title">Trocar senha</h2>
+      <p class="form-error" id="password-error" role="alert" hidden></p>
+      <div class="field"><label for="pw-current">Senha atual</label>
+        <input id="pw-current" name="currentPassword" type="password" autocomplete="current-password" maxlength="128" required>
+        <p class="field-error" data-for="currentPassword" hidden></p></div>
+      <div class="field"><label for="pw-new">Nova senha</label>
+        <input id="pw-new" name="newPassword" type="password" autocomplete="new-password" maxlength="72" required>
+        <p class="hint">Mínimo de 10 caracteres, com maiúsculas, minúsculas e números.</p>
+        <p class="field-error" data-for="newPassword" hidden></p></div>
+      <div class="field"><label for="pw-confirm">Confirmar nova senha</label>
+        <input id="pw-confirm" name="newPasswordConfirm" type="password" autocomplete="new-password" maxlength="72" required>
+        <p class="field-error" data-for="newPasswordConfirm" hidden></p></div>
+      <div class="dialog-actions split-actions">
+        <button class="btn btn-link-danger" type="button" id="btn-delete-account">Excluir minha conta</button>
+        <span>
+          <button class="btn btn-ghost" type="button" data-close>Cancelar</button>
+          <button class="btn btn-primary" type="submit">Salvar senha</button>
+        </span>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-account" aria-labelledby="dlg-account-title">
+    <form id="account-form" method="dialog" novalidate>
+      <h2 id="dlg-account-title">Excluir sua conta</h2>
+      <p>Todos os seus lançamentos serão apagados de forma permanente. Digite sua senha para confirmar.</p>
+      <p class="form-error" id="account-error" role="alert" hidden></p>
+      <div class="field"><label for="acc-password">Senha</label>
+        <input id="acc-password" name="password" type="password" autocomplete="current-password" maxlength="128" required></div>
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" type="button" data-close>Cancelar</button>
+        <button class="btn btn-danger" type="submit">Excluir conta</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/js/common.js" defer></script>
+  <script src="/js/dashboard.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Criar conta · Prumo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth">
+  <main class="auth-layout">
+    <aside class="auth-brand">
+      <div class="plumb" aria-hidden="true"><span class="plumb-line"></span><span class="plumb-weight"></span></div>
+      <p class="wordmark">Prumo</p>
+      <h1>Comece o mês com a conta feita.</h1>
+      <p class="lead">Leva menos de um minuto. Sua senha é guardada com criptografia e seus dados ficam visíveis só para você.</p>
+    </aside>
+
+    <section class="auth-panel" aria-labelledby="titulo">
+      <form id="register-form" method="post" action="/register" novalidate>
+        <h2 id="titulo">Criar sua conta</h2>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+
+        <div class="field">
+          <label for="name">Nome</label>
+          <input id="name" name="name" type="text" autocomplete="name" minlength="2" maxlength="80" required autofocus>
+          <p class="field-error" data-for="name" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required>
+          <p class="field-error" data-for="email" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <input id="password" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="72" required aria-describedby="password-hint">
+          <p class="hint" id="password-hint">Mínimo de 10 caracteres, com maiúsculas, minúsculas e números.</p>
+          <p class="field-error" data-for="password" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="passwordConfirm">Confirmar senha</label>
+          <input id="passwordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" maxlength="72" required>
+          <p class="field-error" data-for="passwordConfirm" hidden></p>
+        </div>
+
+        <label class="check"><input type="checkbox" id="show-password"> Mostrar senhas</label>
+
+        <button class="btn btn-primary btn-block" type="submit">Criar conta</button>
+        <p class="alt">Já tem conta? <a href="/login">Entrar</a></p>
+      </form>
+    </section>
+  </main>
+  <script src="/js/common.js" defer></script>
+  <script src="/js/auth.js" defer></script>
+</body>
+</html>
